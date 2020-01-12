@@ -1,11 +1,11 @@
 # Novetta bleee
 
 <p align="center">
-  <img src="https://github.com/SegFaultPR/Novetta_bleee/blob/master/img/novetta-logo.png"  height="200">
+  <img src="https://github.com/SegFaultPR/Novetta_bleee/blob/master/img/novetta-logo.png"  height="100">
 </p>
 
 ## Disclaimer
-These scripts are experimental PoCs that show what an attacker get from Apple devices if they sniff Bluetooth traffic.
+These scripts are experimental PoCs that show what an attacker may be able to collect from Apple devices if they sniff Bluetooth traffic.
 
 ***We have removed parts of the this code from the origional repo***
 
@@ -15,6 +15,15 @@ These scripts are experimental PoCs that show what an attacker get from Apple de
 ## Requirements
 To use these scripts you will need a Bluetooth adapter for sending `BLE` messages and WiFi card supporting active monitor mode with frame injection for communication using `AWDL` (AirDrop). We recommend the Atheros AR9280 chip (IEEE 802.11n) we used to develop and test this code.
 We have tested these PoCs on **Kali Linux**
+
+##Features Added
+
+#Geo Tags
+  as this will be for demonstration purposes the new code base will contain the ability to tag 
+
+#limits on displayed devices
+
+#White Listing
 
 
 ## Installation
