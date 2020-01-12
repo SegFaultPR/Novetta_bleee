@@ -18,12 +18,12 @@ We have tested these PoCs on **Kali Linux**
 
 ## Features Added
 
-# Geo Tags
+### Geo Tags
   as this will be for demonstration purposes the new code base will contain the ability to tag 
 
-# limits on displayed devices
+### limits on displayed devices
 
-# White Listing
+### White Listing
 
 
 ## Installation
