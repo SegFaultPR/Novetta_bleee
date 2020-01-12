@@ -16,14 +16,14 @@ These scripts are experimental PoCs that show what an attacker may be able to co
 To use these scripts you will need a Bluetooth adapter for sending `BLE` messages and WiFi card supporting active monitor mode with frame injection for communication using `AWDL` (AirDrop). We recommend the Atheros AR9280 chip (IEEE 802.11n) we used to develop and test this code.
 We have tested these PoCs on **Kali Linux**
 
-##Features Added
+## Features Added
 
-#Geo Tags
+# Geo Tags
   as this will be for demonstration purposes the new code base will contain the ability to tag 
 
-#limits on displayed devices
+# limits on displayed devices
 
-#White Listing
+# White Listing
 
 
 ## Installation
