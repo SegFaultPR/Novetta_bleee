@@ -1,11 +1,13 @@
-# Apple bleee
+# Novetta bleee
 
 <p align="center">
-  <img src="https://github.com/hexway/apple_bleee/blob/master/img/logo.jpg"  height="350">
+  <img src="https://github.com/SegFaultPR/Novetta_bleee/blob/master/img/novetta-logo.png"  height="350">
 </p>
 
 ## Disclaimer
 These scripts are experimental PoCs that show what an attacker get from Apple devices if they sniff Bluetooth traffic.
+
+***We have removed parts of the this code from the origional repo***
 
 ***This project is created only for educational purposes and cannot be used for law violation or personal gain.<br/>The author of this project is not responsible for any possible harm caused by the materials of this project***
 
@@ -19,7 +21,7 @@ We have tested these PoCs on **Kali Linux**
 
 ```
 # clone main repo
-git clone https://github.com/hexway/apple_bleee.git && cd ./apple_bleee
+git clone https://github.com/SegFaultPR/Novetta_bleee.git && cd ./Novetta_bleee
 # install dependencies
 sudo apt update && sudo apt install -y bluez libpcap-dev libev-dev libnl-3-dev libnl-genl-3-dev libnl-route-3-dev cmake libbluetooth-dev
 sudo pip3 install -r requirements.txt
@@ -38,7 +40,7 @@ Devices:
 ```
 
 
-### Script: [ble_read_state.py](https://github.com/hexway/apple_bleee/blob/master/ble_read_state.py)
+### Script: [ble_read_state.py](https://github.com/SegFaultPR/Novetta_bleee.git/blob/master/ble_read_state.py)
 
 This script sniffs `BLE` traffic and displays status messages from Apple devices.
 Moreover, the tool detects requests for password sharing from Apple devices. In these packets, we can get first 3 bytes of sha256(phone_number) and could try to guess the original phone number using prepared tables with phone hash values.
@@ -78,46 +80,6 @@ If you want to get phone numbers from a WiFi password request, you have to prepa
 sudo python3 ble_read_state.py -с
 ```
 
-**Video demo (click):**
-
-[![airdrop_demo](img/status_gif.gif)](https://www.youtube.com/watch?v=Bi602yAIBAw)
-
-### Script: [airdrop_leak.py](https://github.com/hexway/apple_bleee/blob/master/airdrop_leak.py)
-
-This script allows to get mobile phone number of any user who will try to send file via AirDrop
-
-For this script, we'll need `AWDL` interface:
-```bash
-# set wifi card to monitor mode and run owl
-sudo iwconfig wlan0 mode monitor && sudo ip link set wlan0 up && sudo owl -i wlan0 -N &
-```
-
-Now, you can run the script
-
-```bash
-python3 airdrop_leak.py -h
-usage: airdrop_leak.py [-h] [-c] [-n] [-m]
-
-Apple AirDrop phone number catcher
----chipik
-
-optional arguments:
-  -h, --help         show this help message and exit
-  -c, --check_hash   Get phone number by hash
-  -n, --check_phone  Get user info by phone number (TrueCaller/etc)
-  -m, --message      Send iMessage to the victim
-```
-
-With no params, the script just displays phone hash and ipv6 address of the sender
-
-```bash
-sudo python3 airdrop_leak.py
-```
-
-**Video demo (click):**
-
-[![airdrop_demo](img/airdrop_gif.gif)](https://www.youtube.com/watch?v=mREIeH_s3z8)
-
 ### Script: [adv_wifi.py](https://github.com/hexway/apple_bleee/blob/master/adv_wifi.py)
 
 This script sends `BLE` messages with WiFi password sharing request. This PoC shows that an attacker can trigger a pop up message on the target device if he/she knows any phone/email that exists on the victim's device
@@ -149,42 +111,6 @@ For a WiFi password request, we'll need to specify any contact (email/phone) tha
 sudo python3 adv_wifi.py -e pr@hexway.io -s hexway
 ```
 
-**Video demo (click):**
-
-[![share_wifi_demo](img/share_wifi_pwd2_gif.gif)](https://www.youtube.com/watch?v=QkGCP2mfbJ8)
-
-### Script: [adv_airpods.py](https://github.com/hexway/apple_bleee/blob/master/adv_airpods.py)
-
-This script mimics AirPods by sending `BLE` messages
-
-```bash
-python3 adv_airpods.py -h
-usage: adv_airpods.py [-h] [-i INTERVAL] [-r]
-
-AirPods advertise spoofing PoC
----chipik
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INTERVAL, --interval INTERVAL
-                        Advertising interval
-  -r, --random          Send random charge values
-```
-
-Let's send `BLE` messages with random charge values for headphones
-
-```bash
-sudo python3 adv_airpods.py -r
-```
-
-**Video demo (click):**
-
-[![airdrop_demo](img/airpods_gif.gif)](https://www.youtube.com/watch?v=HoSuLUtrkXo)
-
-### Script: [hash2phone](https://github.com/hexway/apple_bleee/blob/master/hash2phone/)
-
-You can use this script to create pre-calculated table with mobile phone numbers hashes<br>
-Please find details [here](/hash2phone)
 
 ## Contacts
 
