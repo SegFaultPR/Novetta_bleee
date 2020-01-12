@@ -1,7 +1,7 @@
 # Novetta bleee
 
 <p align="center">
-  <img src="https://github.com/SegFaultPR/Novetta_bleee/blob/master/img/novetta-logo.png"  height="250">
+  <img src="https://github.com/SegFaultPR/Novetta_bleee/blob/master/img/novetta-logo.png"  height="200">
 </p>
 
 ## Disclaimer
