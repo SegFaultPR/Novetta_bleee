@@ -125,7 +125,10 @@ sudo python3 adv_wifi.py -e pr@hexway.io -s hexway
 ## Contacts
 [Novetta](https://Novetta.com)
 
+
 SegFaultPR
+
+
 Wasabi (FrustratedITGuy)
 [thewasabiguy GITHUB](https://github.com/thewasabiguy)
 [@FrustratedITGuy](https://twitter.com/FrustratedITGuy)
