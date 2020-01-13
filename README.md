@@ -14,17 +14,20 @@ These scripts are experimental PoCs that show what an attacker may be able to co
 
 
 ## Requirements
-To use these scripts you will need a Bluetooth adapter for sending `BLE` messages and WiFi card supporting active monitor mode with frame injection for communication using `AWDL` (AirDrop). We recommend the Atheros AR9280 chip (IEEE 802.11n) we used to develop and test this code.
+To use these scripts you will need a Bluetooth adapter for sending `BLE` messages and WiFi card supporting active monitor mode with frame injection we recommend the Atheros AR9280 chip (IEEE 802.11n) we used to develop and test this code.
 We have tested these PoCs on **Kali Linux**
 
 ## Features Added
 
 ### Geo Tags
-  as this will be for demonstration purposes the new code base will contain the ability to tag 
+  As this will be for demonstration purposes the new code base will contain the ability to tag 
+  We will be adding tags for all the conferences our collection rig will be traveling to.
 
 ### limits on displayed devices
+  Screen realestate is key within the terminal.  While the origional code allows you to scroll down and onto another "screen", we will be limiting the ativity on the screen to the devices nearby.
 
 ### White Listing
+  No one wants to see their own devices on the screen and devices will also be white listed per request.
 
 
 ## Installation
@@ -53,26 +56,19 @@ Devices:
 ### Script: [ble_read_state.py](https://github.com/SegFaultPR/Novetta_bleee.git/blob/master/ble_read_state.py)
 
 This script sniffs `BLE` traffic and displays status messages from Apple devices.
-Moreover, the tool detects requests for password sharing from Apple devices. In these packets, we can get first 3 bytes of sha256(phone_number) and could try to guess the original phone number using prepared tables with phone hash values.
 
 ![dev_status](img/dev_status.png)
 
 ```bash
 python3 ble_read_state.py -h
-usage: ble_read_state.py [-h] [-c] [-n] [-r] [-l] [-s] [-m] [-a] [-t TTL]
+usage: ble_read_state.py [-h] [-s] [-t TTL]
 
 Apple bleee. Apple device sniffer
 ---chipik
 
 optional arguments:
   -h, --help          show this help message and exit
-  -c, --check_hash    Get phone number by hash
-  -n, --check_phone   Get user info by phone number (TrueCaller/etc)
-  -r, --check_region  Get phone number region info
-  -l, --check_hlr     Get phone number info by HLR request (hlrlookup.com)
   -s, --ssid          Get SSID from requests
-  -m, --message       Send iMessage to the victim
-  -a, --airdrop       Get info from AWDL
   -t TTL, --ttl TTL   ttl
 ```
 
@@ -90,45 +86,15 @@ If you want to get phone numbers from a WiFi password request, you have to prepa
 sudo python3 ble_read_state.py -с
 ```
 
-### Script: [adv_wifi.py](https://github.com/hexway/apple_bleee/blob/master/adv_wifi.py)
-
-This script sends `BLE` messages with WiFi password sharing request. This PoC shows that an attacker can trigger a pop up message on the target device if he/she knows any phone/email that exists on the victim's device
-
-```bash
-python3 adv_wifi.py -h
-usage: adv_wifi.py [-h] [-p PHONE] [-e EMAIL] [-a APPLEID] -s SSID
-                   [-i INTERVAL]
-
-WiFi password sharing spoofing PoC
----chipik
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -p PHONE, --phone PHONE
-                        Phone number (example: 39217XXX514)
-  -e EMAIL, --email EMAIL
-                        Email address (example: test@test.com)
-  -a APPLEID, --appleid APPLEID
-                        Email address (example: test@icloud.com)
-  -s SSID, --ssid SSID  WiFi SSID (example: test)
-  -i INTERVAL, --interval INTERVAL
-                        Advertising interval
-```
-
-For a WiFi password request, we'll need to specify any contact (email/phone) that exists in a victim's contacts and the SSID of a WiFi network the victim knows
-
-```bash
-sudo python3 adv_wifi.py -e pr@hexway.io -s hexway
-```
-
 
 ## Contacts
 [Novetta](https://Novetta.com)
 
 
-SegFaultPR
+SegFaultPR<br>
+[GITHUB](https://github.com/SegFaultPR/)<br>
 
-
-Wasabi (FrustratedITGuy)
-[thewasabiguy GITHUB](https://github.com/thewasabiguy)
-[@FrustratedITGuy](https://twitter.com/FrustratedITGuy)
+Wasabi<br>
+[GITHUB thewasabiguy](https://github.com/thewasabiguy)<br>
+[GITHUB tallmon-novetta](https://github.com/tallmon-novetta)<br>
+[TWITTER @FrustratedITGuy](https://twitter.com/FrustratedITGuy)
