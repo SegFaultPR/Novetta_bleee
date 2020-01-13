@@ -289,12 +289,20 @@ ble_packets_types = {'watch_c': '0b',
                      'airdrop': '05',
                      }
 
-conference_names = {'shmoocon': 'SHM',
-                    'bsidescharm': 'BSC',
-                    'bsidesnova': 'BSN',
-                    'bsidesdc': 'BSD',
-                    'defcon' : 'DFC',
-                    'pycon': 'PYC',
+conference_names = {'SHM': 'Shmoocon',
+                    'BSC': 'BSidesCharm',
+                    'BSN': 'BSidesNova', 
+                    'BSD': 'BSidesDC', 
+                    'BSA': 'BSidesAug',
+                    'DFC': 'Defcon',
+                    'PYC': 'Pycon',
+                    'RSA': 'RSA',
+                    'AFC': 'AFCEA',
+                    'RES': 'ReStart',
+                    'AWR': 'AWSReInforce',
+                    'DDI': 'DoDIIS',
+                    'STD': 'StrataData',
+                    'AWI': 'AWSReInvent',
 }
 
 
