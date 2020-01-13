@@ -8,6 +8,7 @@
 These scripts are experimental PoCs that show what an attacker may be able to collect from Apple devices if they sniff Bluetooth traffic.
 
 ***We have removed parts of the this code from the origional repo***
+***That includes: Airdrop, hashing/phone number and message***  
 
 ***This project is created only for educational purposes and cannot be used for law violation or personal gain.<br/>The author of this project is not responsible for any possible harm caused by the materials of this project***
 
@@ -122,6 +123,9 @@ sudo python3 adv_wifi.py -e pr@hexway.io -s hexway
 
 
 ## Contacts
+[Novetta](https://Novetta.com)
 
-[https://hexway.io](https://hexway.io)<br>
-[@_hexway](https://twitter.com/_hexway)
+SegFaultPR
+Wasabi (FrustratedITGuy)
+[thewasabiguy GITHUB](https://github.com/thewasabiguy)
+[@FrustratedITGuy](https://twitter.com/FrustratedITGuy)
