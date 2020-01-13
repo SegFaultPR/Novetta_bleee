@@ -289,6 +289,18 @@ ble_packets_types = {'watch_c': '0b',
                      'airdrop': '05',
                      }
 
+conference_names = {'shmoocon': 'SHM',
+                    'bsidescharm': 'BSC',
+                    'bsidesnova': 'BSN',
+                    'bsidesdc': 'BSD',
+                    'defcon' : 'DFC',
+                    'pycon': 'PYC',
+}
+
+
+#remove args that are for offensive capabilities
+#keywords airdrop, hash, imessage, hash2phone, hlr
+
 if args.check_hash:
     if not (hash2phone_url or path.isfile(hash2phone_db)):
         print("You have to specify hash2phone_url or create phones.db if you want to match hashes to phones. See howto here: https://github.com/hexway/apple_bleee/tree/master/hash2phone")
