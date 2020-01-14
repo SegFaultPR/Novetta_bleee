@@ -31,7 +31,10 @@ Apple bleee. Apple device sniffer
 '''
 urllib3.disable_warnings()
 parser = argparse.ArgumentParser(description=help_desc, formatter_class=argparse.RawTextHelpFormatter)
+##**remove hash stuff
 parser.add_argument('-c', '--check_hash', action='store_true', help='Get phone number by hash')
+#I would like to reclaim the -c for --conf for adding conference tag to cli flags
+#parser.add_argument('-c', '--conf_tag', action='store_true', help='add the conference code you will add to the collection')
 parser.add_argument('-n', '--check_phone', action='store_true', help='Get user info by phone number (TrueCaller/etc)')
 parser.add_argument('-r', '--check_region', action='store_true', help='Get phone number region info')
 parser.add_argument('-l', '--check_hlr', action='store_true',
@@ -41,6 +44,9 @@ parser.add_argument('-m', '--message', action='store_true', help='Send iMessage 
 parser.add_argument('-a', '--airdrop', action='store_true', help='Get info from AWDL')
 parser.add_argument('-v', '--verb', action='store_true', help='Verbose output')
 parser.add_argument('-t', '--ttl', type=int, default=15, help='ttl')
+##** all these features use offensive capabilities to the above comment
+
+
 args = parser.parse_args()
 
 if args.check_phone:
