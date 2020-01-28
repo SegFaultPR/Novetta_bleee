@@ -32,37 +32,22 @@ Apple bleee. Apple device sniffer
 urllib3.disable_warnings()
 parser = argparse.ArgumentParser(description=help_desc, formatter_class=argparse.RawTextHelpFormatter)
 ##**remove hash stuff
-parser.add_argument('-c', '--check_hash', action='store_true', help='Get phone number by hash')
-#I would like to reclaim the -c for --conf for adding conference tag to cli flags
-#parser.add_argument('-c', '--conf_tag', action='store_true', help='add the conference code you will add to the collection')
-parser.add_argument('-n', '--check_phone', action='store_true', help='Get user info by phone number (TrueCaller/etc)')
-parser.add_argument('-r', '--check_region', action='store_true', help='Get phone number region info')
-parser.add_argument('-l', '--check_hlr', action='store_true',
-                    help='Get phone number info by HLR request (hlrlookup.com)')
+#parser.add_argument('-c', '--check_hash', action='store_true', help='Get phone number by hash')
+#I would like to reclaim the -c for -conf for adding conference tag to cli flags
+parser.add_argument('-c', '--conf_tag', action='append', dest='conf_tag', help='add the conference code you will add to the collection')
 parser.add_argument('-s', '--ssid', action='store_true', help='Get SSID from requests')
-parser.add_argument('-m', '--message', action='store_true', help='Send iMessage to the victim')
-parser.add_argument('-a', '--airdrop', action='store_true', help='Get info from AWDL')
 parser.add_argument('-v', '--verb', action='store_true', help='Verbose output')
 parser.add_argument('-t', '--ttl', type=int, default=15, help='ttl')
+parser.add_argument('-a', '--airdrop', action='store_true', help='Get info from AWDL')
 ##** all these features use offensive capabilities to the above comment
 
 
 args = parser.parse_args()
 
-if args.check_phone:
-    # import from TrueCaller API lib (sorry, but we did some RE for that :))
-    print("Sorry, but we don't provide this functionality as a part of this PoC")
-    exit(1)
 if args.airdrop:
     from opendrop2.cli import AirDropCli, get_devices
 
-hash2phone_url = ''  # URL to hash2phone matcher
-hash2phone_db = "hash2phone/phones.db"
-hlr_key = ''  # hlrlookup.com key here
-hlr_pwd = ''  # hlrlookup.com password here
-hlr_api_url = 'https://www.hlrlookup.com/api/hlr/?apikey={}&password={}&msisdn='.format(hlr_key, hlr_pwd)
-region_check_url = ''  # URL to region checker here
-imessage_url = ''  # URL to iMessage sender (sorry, but we did some RE for that :) )
+conf_db = "Conferences/conf.db"
 iwdev = 'wlan0'
 apple_company_id = 'ff4c00'
 
@@ -70,7 +55,7 @@ dev_id = 0  # the bluetooth device is hci0
 toggle_device(dev_id, True)
 
 sock = 0
-titles = ['Mac', 'State', 'Device', 'WI-FI', 'OS', 'Phone', 'Time']
+titles = ['Mac', 'State', 'Device', 'WI-FI', 'OS', 'Where it was seen', 'Time']
 dev_sig = {'02010': 'MacBook', '02011': 'iPhone'}
 dev_types = ["iPad", "iPhone", "MacOS", "AirPods"]
 phones = {}
@@ -79,7 +64,6 @@ resolved_macs = []
 resolved_numbers = []
 victims = []
 phone_number_info = {}
-hash2phone = {}
 dictOfss = {}
 proxies = {}
 verify = False
@@ -309,27 +293,16 @@ conference_names = {'SHM': 'Shmoocon',
                     'DDI': 'DoDIIS',
                     'STD': 'StrataData',
                     'AWI': 'AWSReInvent',
+                    'TST': 'TESTING',
 }
 
 
 #remove args that are for offensive capabilities
 #keywords airdrop, hash, imessage, hash2phone, hlr
 
-if args.check_hash:
-    if not (hash2phone_url or path.isfile(hash2phone_db)):
-        print("You have to specify hash2phone_url or create phones.db if you want to match hashes to phones. See howto here: https://github.com/hexway/apple_bleee/tree/master/hash2phone")
-        exit(1)
-if args.check_hlr:
-    if not hlr_key or hlr_pwd:
-        print("You have to specify hlr_key or hlr_pwd for HLR requests")
-        exit(1)
-if args.check_region:
-    if not region_check_url:
-        print("You have to specify region_check_url for region requests")
-        exit(1)
-if args.message:
-    if not imessage_url:
-        print("You have to specify imessage_url if you want to send iMessages to the victim")
+if args.conf_tag: #check_hash:
+    if not (path.isfile(conf_db)):
+        print("You have to specified a conf.db.  Create phones.db if you want to match MAC from previous conferences.")
         exit(1)
 
 
@@ -452,17 +425,12 @@ class MainForm(npyscreen.FormBaseNew):
             thread2 = Thread(target=self.get_dev_name, args=(mac,))
             thread2.daemon = True
             thread2.start()
-        if cell == 'Phone':
+        if cell == 'Where it was seen':
             if self.get_phone_val_from_cell() == 'X':
-                hashinfo = "Phone hash={}, email hash={}, AppleID hash={}, SSID hash={} ({})".format(
-                    hash2phone[self.get_mac_val_from_cell()]['ph_hash'],
-                    hash2phone[self.get_mac_val_from_cell()]['email_hash'],
-                    hash2phone[self.get_mac_val_from_cell()]['appleID_hash'],
-                    hash2phone[self.get_mac_val_from_cell()]['SSID_hash'],
-                    get_dict_val(dictOfss, hash2phone[self.get_mac_val_from_cell()]['SSID_hash']))
-                table = print_results2(hash2phone[self.get_mac_val_from_cell()]['phone_info'])
-                rez = "{}\n\n{}".format(hashinfo, table)
-                npyscreen.notify_confirm(rez, title="Phone number info", wrap=True, wide=True, editw=0)
+                print("in testing")
+                #table = print_results2(hash2phone[self.get_mac_val_from_cell()]['phone_info'])
+                #rez = "{}\n\n{}".format(hashinfo, table)
+                #npyscreen.notify_confirm(rez, title="Phone number info", wrap=True, wide=True, editw=0)
 
 
 def clear_zombies():
@@ -485,7 +453,7 @@ def print_results():
     row = []
     for phone in phones:
         row.append([phone, phones[phone]['state'], phones[phone]['device'], phones[phone]['wifi'], phones[phone]['os'],
-                    phones[phone]['phone'], phones[phone]['time']])
+                    phones[phone]['conf'], phones[phone]['time']])
     return row
 
 
@@ -587,7 +555,7 @@ def parse_nearby(mac, header, data):
         if mac not in resolved_devs:
             phones[mac]['device'] = dev_val
     else:
-        phones[mac] = {'state': unkn, 'device': unkn, 'wifi': unkn, 'os': unkn, 'phone': '', 'time': int(time.time())}
+        phones[mac] = {'state': unkn, 'device': unkn, 'wifi': unkn, 'os': unkn, 'conf': '', 'time': int(time.time())}
         phones[mac]['device'] = dev_val
         resolved_macs.append(mac)
 
@@ -624,7 +592,7 @@ def parse_wifi_set(mac, data):
     if mac in resolved_macs or mac in resolved_devs:
         phones[mac]['state'] = 'WiFi screen'
     else:
-        phones[mac] = {'state': unkn, 'device': unkn, 'wifi': unkn, 'os': unkn, 'phone': '', 'time': int(time.time())}
+        phones[mac] = {'state': unkn, 'device': unkn, 'wifi': unkn, 'os': unkn, 'conf': '', 'time': int(time.time())}
         resolved_macs.append(mac)
 
 
@@ -659,23 +627,12 @@ def parse_wifi_j(mac, data):
     unkn = '<unknown>'
     if mac not in victims:
         victims.append(mac)
-        if args.check_hash:
-            if hash2phone_url: get_phone_web(result['phone_hash'])
-            else: get_phone_db(result['phone_hash'])
-            if args.check_phone:
-                get_names(True)
-            if args.check_hlr:
-                thread3 = Thread(target=get_hlr_info, args=(mac,))
-                thread3.daemon = True
-                thread3.start()
-            if args.check_region:
-                thread4 = Thread(target=get_regions(), args=())
-                thread4.daemon = True
-                thread4.start()
-            if args.message:
-                thread4 = Thread(target=sendToTheVictims, args=(result['ssid_hash'],))
-                thread4.daemon = True
-                thread4.start()
+# This is part of the offensive capabilities, and will be removed
+        if args.conf_tag: #check_hash:
+            print(args.conf_tag)
+#            if hash2phone_url: get_phone_web(result['phone_hash'])
+#            else: get_phone_db(result['phone_hash'])
+#                thread4.start()
         if resolved_macs.count(mac):
             phones[mac]['time'] = int(time.time())
             phones[mac]['phone'] = 'X'
@@ -765,7 +722,7 @@ def read_packet(mac, data_str):
 
 def get_phone_db(hashp):
     global phone_number_info
-    conn = sqlite3.connect(hash2phone_db)
+    conn = sqlite3.connect(conf_db)
     c = conn.cursor()
     c.execute('SELECT phone FROM map WHERE hash=?', (hashp,))
     phones = c.fetchall()
@@ -777,19 +734,6 @@ def get_phone_db(hashp):
 
 
 
-def get_phone_web(hash):
-    global phone_number_info
-    r = requests.get(hash2phone_url, proxies=proxies, params={'hash': hash}, verify=verify)
-    if r.status_code == 200:
-        result = r.json()
-        phone_number_info = {i: {'phone': '', 'name': '', 'carrier': '', 'region': '', 'status': '', 'iMessage': ''} for
-                             i in result['candidates']}
-        for phone in phone_number_info:
-            phone_number_info[phone]['phone'] = phone
-    else:
-        print("Something wrong! Status: {}".format(r.status_code))
-
-
 def get_hlr_info(mac):
     global phone_number_info
     r = requests.get(hlr_api_url + ','.join(phone_number_info.keys()), proxies=proxies, verify=verify)
@@ -799,44 +743,12 @@ def get_hlr_info(mac):
             phone_number_info[info]['status'] = '{}'.format(result[info]['error_text'])
 
 
-def get_region(phone):
-    global phone_number_info
-    r = requests.get(region_check_url + phone, proxies=proxies, verify=verify)
-    if r.status_code == 200:
-        soup = BeautifulSoup(r.content, 'html.parser')
-        text = str(soup.find("div", {"class": "itemprop_answer"}))
-        region = re.findall(r'Region:(.*?)L', text, flags=re.DOTALL)[0].replace('<br/>', '').replace('\n', '')
-        phone_number_info[phone]['region'] = region
-    else:
-        print("Something wrong! Status: {}".format(r.status_code))
-
-
-def print_results2(data):
-    x = PrettyTable()
-    x.field_names = ["Phone", "Name", "Carrier", "Region", "Status", 'iMessage']
-    for phone in data:
-        x.add_row([data[phone]['phone'], data[phone]['name'], data[phone]['carrier'], data[phone]['region'],
-                   data[phone]['status'], data[phone]['iMessage']])
-    return x.get_string()
-
 
 def print_wifi_devs():
     return print_results3(get_devices())
 
 
-def get_names(lat=False):
-    global phone_number_info
-    for phone in phone_number_info:
-        (name, carrier, region) = get_number_info_TrueCaller('+{}'.format(phone), lat)
-        phone_number_info[phone]['name'] = name
-        phone_number_info[phone]['carrier'] = carrier
-        phone_number_info[phone]['region'] = region
-    init_bluez()
 
-
-def get_regions():
-    for phone in phone_number_info:
-        get_region(phone)
 
 
 def get_dict_val(dict, key):
@@ -873,9 +785,6 @@ def do_sniff(prnt):
         disable_le_scan(sock)
 
 
-def get_hash(data, size=6):
-    return hashlib.sha256(data.encode('utf-8')).hexdigest()[:size]
-
 
 def get_ssids():
     global dictOfss
@@ -897,43 +806,6 @@ def get_ssids():
     else:
         dictOfss = {}
 
-
-def send_imessage(tel, text):
-    # our own service to send iMessage
-    data = {"token": "",
-            "destination": "+{}".format(tel),
-            "text": text
-            }
-    r = requests.post(imessage_url + '/imessage', data=json.dumps(data), proxies=proxies, verify=verify)
-    if r.status_code == 200:
-        result = r.json()
-        phone_number_info[tel]['iMessage'] = 'X'
-    elif r.status_code == 404:
-        phone_number_info[tel]['iMessage'] = '-'
-    else:
-        print(r.content)
-        print("Something wrong! Status: {}".format(r.status_code))
-
-
-def sendToTheVictims(SSID_hash):
-    global phone_number_info
-    text = ''
-    for phone in phone_number_info:
-        if phone_number_info[phone]['name'] and get_dict_val(dictOfss, SSID_hash):
-            text = 'Hi {}! Looks like you have tried to connect to WiFi:{}'.format(phone_number_info[phone]['name'],
-                                                                                   get_dict_val(dictOfss, SSID_hash))
-        elif phone_number_info[phone]['name']:
-            text = 'Hi {}! Gotcha!'.format(phone_number_info[phone]['name'])
-        elif get_dict_val(dictOfss, SSID_hash):
-            text = 'Looks like you have tried to connect to WiFi:{}'.format(get_dict_val(dictOfss, SSID_hash))
-        else:
-            text = 'Gotcha!'
-        if args.check_hlr:
-            if phone_number_info[phone]['status'] == 'Live':
-                send_imessage(phone, text)
-        else:
-            send_imessage(phone, text)
-        time.sleep(2)
 
 
 def start_listetninig():
