@@ -67,6 +67,7 @@ phone_number_info = {}
 dictOfss = {}
 proxies = {}
 verify = False
+phonesdict = {}
 
 # not sure about 1b, 13, 0a, 1a, 17
 phone_states = {
@@ -452,8 +453,13 @@ def print_results():
     clear_zombies()
     row = []
     for phone in phones:
-        row.append([phone, phones[phone]['state'], phones[phone]['device'], phones[phone]['wifi'], phones[phone]['os'],
-                    phones[phone]['conf'], phones[phone]['time']])
+        if phone in phonesdict:
+            row.append([phone, phones[phone]['state'], phones[phone]['device'], phones[phone]['wifi'], phones[phone]['os'],
+                    phonesdict[phone], phones[phone]['time']])
+        else:
+            row.append([phone, phones[phone]['state'], phones[phone]['device'], phones[phone]['wifi'], phones[phone]['os'],
+                    "new", phones[phone]['time']])
+            phonesdict[phone] = ["new", "TST"] #phones[phone]['conf']
     return row
 
 
@@ -726,21 +732,13 @@ def get_phone_db(hashp):
     c = conn.cursor()
     c.execute('SELECT phone FROM map WHERE hash=?', (hashp,))
     phones = c.fetchall()
-    if not phones: print("No phone number found for hash '%s'" % hashp)
+    if not phones: 
+        return "new" #print("No phone number found for hash '%s'" % hashp)
     else:
         phone_number_info = {str(i[0]): {'phone': str(i[0]), 'name': '', 'carrier': '', 'region': '', 'status': '', 'iMessage': ''}
                              for i in phones}
     conn.close()
 
-
-
-def get_hlr_info(mac):
-    global phone_number_info
-    r = requests.get(hlr_api_url + ','.join(phone_number_info.keys()), proxies=proxies, verify=verify)
-    if r.status_code == 200:
-        result = r.json()
-        for info in result:
-            phone_number_info[info]['status'] = '{}'.format(result[info]['error_text'])
 
 
 
@@ -831,20 +829,6 @@ def adv_airdrop():
                              data=(header + data1 + apple_id + phone + email + data2))
         time.sleep(10)
         stop_le_advertising(sock)
-
-
-def print_results3(data):
-    if not len(data):
-        return ''
-    u_data = []
-    for dev in data:
-        if dev not in u_data:
-            u_data.append(dev)
-    x = PrettyTable()
-    x.field_names = ["Name", "Host", "OS", "Discoverable", 'Address']
-    for dev in u_data:
-        x.add_row([dev['name'], dev['host'], dev['os'], dev['discoverable'], dev['address']])
-    return x.get_string()
 
 
 if args.ssid:
